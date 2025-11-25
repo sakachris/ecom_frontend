@@ -27,6 +27,7 @@ export default async function HomePage({ searchParams }: Props) {
   const category = params.category;
   const min_price = params.price__gte;
   const max_price = params.price__lte;
+  const average_rating = params.average_rating__gte;
 
   // Map UI sort → API ordering param
   let ordering: string | undefined = undefined;
@@ -34,6 +35,7 @@ export default async function HomePage({ searchParams }: Props) {
   if (sort === "price_asc") ordering = "price";
   else if (sort === "price_desc") ordering = "-price";
   else if (sort === "new") ordering = "-created_at";
+  else if (sort === "rating") ordering = "-average_rating";
   else ordering = undefined;
 
   const productsUrl = buildUrl(PRODUCTS_API, {
@@ -44,6 +46,7 @@ export default async function HomePage({ searchParams }: Props) {
     ...(category ? { category } : {}),
     ...(min_price ? { price__gte: min_price } : {}),
     ...(max_price ? { price__lte: max_price } : {}),
+    ...(average_rating ? { average_rating__gte: average_rating } : {}),
   });
 
   const categoriesUrl = buildUrl(CATEGORIES_API);
