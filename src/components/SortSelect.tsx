@@ -26,11 +26,11 @@ export default function SortSelect() {
       value={selected}
       onChange={(e) => onChange(e.target.value)}
     >
-      {/* <option value="">Most Popular</option> */}
       <option value="new">Newest</option>
       <option value="price_asc">Price: Low → High</option>
       <option value="price_desc">Price: High → Low</option>
       <option value="rating">Top Rated</option>
+      <option value="reviews">Most Reviewed</option>
     </select>
   );
 }

@@ -22,24 +22,26 @@ export default function ProductCard({ p }: { p: Product }) {
     "
     >
       {/* Image */}
-      <div
-        className="
-        w-full 
-        aspect-square 
-        bg-gray-50 
-        rounded-xl 
-        overflow-hidden 
-        relative
-      "
-      >
-        <Image
-          src={p.primary_image}
-          alt={p.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-        />
-      </div>
+      <Link href={`/products/${p.product_id}`} passHref>
+        <div
+          className="
+          w-full 
+          aspect-square 
+          bg-gray-50 
+          rounded-xl 
+          overflow-hidden 
+          relative
+        "
+        >
+          <Image
+            src={p.primary_image}
+            alt={p.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          />
+        </div>
+      </Link>
 
       {/* Name + Category */}
       <div>
@@ -53,7 +55,7 @@ export default function ProductCard({ p }: { p: Product }) {
       <div className="flex items-center gap-2">
         <StarRating rating={p.average_rating} size={12} />
         <span className="text-xs text-gray-600">
-          {Number(p.average_rating).toFixed(1)}/5
+          {Number(p.average_rating).toFixed(1)}/5 ({p.reviews_count} reviews)
         </span>
       </div>
 

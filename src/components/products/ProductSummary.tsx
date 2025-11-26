@@ -63,7 +63,7 @@ export default function ProductSummary({ product }: Props) {
 
         <div>
           <div className="text-2xl sm:text-3xl font-extrabold text-black">
-            KSh {Number(product.price).toFixed(2)}
+            ${Number(product.price).toFixed(2)}
           </div>
 
           {isOutOfStock ? (

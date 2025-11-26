@@ -36,6 +36,7 @@ export default async function HomePage({ searchParams }: Props) {
   else if (sort === "price_desc") ordering = "-price";
   else if (sort === "new") ordering = "-created_at";
   else if (sort === "rating") ordering = "-average_rating";
+  else if (sort === "reviews") ordering = "-reviews_count";
   else ordering = undefined;
 
   const productsUrl = buildUrl(PRODUCTS_API, {
