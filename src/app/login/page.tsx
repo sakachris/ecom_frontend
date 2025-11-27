@@ -22,7 +22,8 @@ export default function LoginPage() {
     const already = params.get("already");
     const expired = params.get("expired");
     const invalid = params.get("invalid");
-    const email = params.get("email");
+    const encoded = params.get("email");
+    const email = encoded ? atob(encoded) : null;
 
     if (email) setPrefilledEmail(email);
 
