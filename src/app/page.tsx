@@ -9,6 +9,7 @@ import ProductFilterSidebar from "@/components/products/ProductFilterSidebar";
 import Pagination from "@/components/ui/Pagination";
 import SearchBar from "@/components/SearchBar";
 import SortSelect from "@/components/SortSelect";
+import Footer from "@/components/Footer";
 
 const PRODUCTS_API = "/products/";
 const CATEGORIES_API = "/categories/?page_size=20";
@@ -103,17 +104,7 @@ export default async function HomePage({ searchParams }: Props) {
           )}
         </div>
       </section>
-
-      <footer className="bg-white border-t mt-10">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-between">
-            <div className="font-bold text-xl">ELECTROCO</div>
-            <div className="text-sm text-gray-600">
-              © {new Date().getFullYear()} ELECTROCO
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

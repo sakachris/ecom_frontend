@@ -26,13 +26,13 @@ export default function Header() {
           </Link>
 
           {/* Search bar (optional but nice to have) */}
-          <div className="hidden md:flex flex-1 mx-8">
+          {/* <div className="hidden md:flex flex-1 mx-8">
             <input
               type="text"
               placeholder="Search products..."
               className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-black focus:ring-1 focus:ring-black transition"
             />
-          </div>
+          </div> */}
 
           {/* Right-side icons */}
           <div className="flex items-center gap-4">
@@ -92,13 +92,13 @@ export default function Header() {
         </div>
 
         {/* Mobile Search */}
-        <div className="px-4 pb-3 md:hidden">
+        {/* <div className="px-4 pb-3 md:hidden">
           <input
             type="text"
             placeholder="Search products..."
             className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-black focus:ring-1 focus:ring-black transition"
           />
-        </div>
+        </div> */}
       </header>
       <AuthModal open={open} onClose={() => setOpen(false)} />
     </>

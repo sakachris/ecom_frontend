@@ -6,6 +6,7 @@ import ProductSummary from "@/components/products/ProductSummary";
 import ProductTabs from "@/components/products/ProductTabs";
 import { buildUrl, fetchJson } from "@/lib/apiClient";
 import { buildGalleryImages } from "@/lib/buildGalleryImages";
+import Footer from "@/components/Footer";
 
 type Props = {
   params: {
@@ -99,6 +100,7 @@ export default async function ProductPage({ params }: Props) {
           <ProductTabs product={product} reviews={reviews} />
         </section>
       </div>
+      <Footer />
     </main>
   );
 }
