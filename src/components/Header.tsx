@@ -1,74 +1,4 @@
 // src/components/Header.tsx
-// "use client";
-
-// import Link from "next/link";
-// import { useState } from "react";
-// import { ShoppingCart, User } from "lucide-react";
-// import AuthModal from "@/components/auth/AuthModal";
-// import { useAppDispatch, useAppSelector } from "@/store/store";
-// import { logout } from "@/store/authSlice";
-
-// export default function Header() {
-//   const [open, setOpen] = useState(false);
-//   const auth = useAppSelector((s) => s.auth);
-//   const dispatch = useAppDispatch();
-
-//   const isLoggedIn = Boolean(auth.access && auth.email);
-
-//   return (
-//     <>
-//       <header className="bg-white border-b sticky top-0 z-40">
-//         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-//           <Link href="/" className="font-bold text-2xl">
-//             ELECTROCO
-//           </Link>
-
-//           <div className="flex items-center gap-4">
-//             <div className="hidden md:block w-[420px]">
-//               <input
-//                 className="w-full border rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-black"
-//                 placeholder="Search products..."
-//               />
-//             </div>
-
-//             <Link
-//               href="/cart"
-//               className="relative p-2 rounded hover:bg-gray-100 transition"
-//             >
-//               <ShoppingCart className="w-5 h-5" />
-//               <span className="absolute -top-1 -right-1 bg-black text-white text-xs px-1 rounded-full">
-//                 2
-//               </span>
-//             </Link>
-
-//             {isLoggedIn ? (
-//               <div className="flex items-center gap-2">
-//                 <div className="text-sm text-gray-700">{auth.email}</div>
-//                 <button
-//                   onClick={() => dispatch(logout())}
-//                   className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
-//                 >
-//                   Logout
-//                 </button>
-//               </div>
-//             ) : (
-//               <button
-//                 onClick={() => setOpen(true)}
-//                 className="flex items-center gap-2 px-3 py-1 rounded bg-black text-white"
-//               >
-//                 <User className="w-4 h-4" /> Sign in
-//               </button>
-//             )}
-//           </div>
-//         </div>
-//       </header>
-
-//       <AuthModal open={open} onClose={() => setOpen(false)} />
-//     </>
-//   );
-// }
-
-// src/components/Header.tsx
 
 "use client";
 
@@ -80,9 +10,6 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { logout } from "@/store/authSlice";
 
 export default function Header() {
-  // simulate user login state (replace later with real auth)
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [open, setOpen] = useState(false);
   const auth = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();

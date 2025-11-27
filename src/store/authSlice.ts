@@ -17,6 +17,8 @@ type AuthState = {
   first_name?: string | null;
   last_name?: string | null;
 
+  isAuthenticated: boolean;
+
   status: "idle" | "loading" | "succeeded" | "failed";
   error?: string | null;
 
@@ -37,6 +39,8 @@ const initialState: AuthState = {
   first_name: null,
   last_name: null,
 
+  isAuthenticated: false,
+
   status: "idle",
   error: null,
 
@@ -53,21 +57,6 @@ const initialState: AuthState = {
 /* ------------------------------------
  * LOGIN
  * -----------------------------------*/
-// export const loginUser = createAsyncThunk(
-//   "auth/loginUser",
-//   async (
-//     { email, password }: { email: string; password: string },
-//     { rejectWithValue }
-//   ) => {
-//     try {
-//       const tokens = await loginApi(email, password);
-//       saveTokens(tokens.access, tokens.refresh, email);
-//       return { ...tokens, email };
-//     } catch (err: any) {
-//       return rejectWithValue(err.message || "Login failed");
-//     }
-//   }
-// );
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (
@@ -76,7 +65,13 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const tokens = await loginApi(email, password);
-      saveTokens(tokens.access, tokens.refresh, email);
+      saveTokens(
+        tokens.access,
+        tokens.refresh,
+        email,
+        tokens.first_name,
+        tokens.last_name
+      );
       return { ...tokens, email };
     } catch (err: any) {
       return rejectWithValue(err); // Keep JSON
@@ -147,6 +142,16 @@ export const resendVerification = createAsyncThunk(
   }
 );
 
+export const hydrateAuth = createAsyncThunk("auth/hydrate", async () => {
+  return {
+    access: localStorage.getItem("ecom_access"),
+    refresh: localStorage.getItem("ecom_refresh"),
+    email: localStorage.getItem("ecom_user_email"),
+    first_name: localStorage.getItem("ecom_user_first_name"),
+    last_name: localStorage.getItem("ecom_user_last_name"),
+  };
+});
+
 /* ------------------------------------
  * SLICE
  * -----------------------------------*/
@@ -161,6 +166,8 @@ const authSlice = createSlice({
       state.email = localStorage.getItem("ecom_user_email");
       state.first_name = localStorage.getItem("ecom_user_first_name");
       state.last_name = localStorage.getItem("ecom_user_last_name");
+
+      state.isAuthenticated = !!state.access;
     },
     logout(state) {
       state.access = null;
@@ -168,6 +175,7 @@ const authSlice = createSlice({
       state.email = null;
       state.first_name = null;
       state.last_name = null;
+      state.isAuthenticated = false;
       clearTokens();
     },
   },
@@ -186,6 +194,18 @@ const authSlice = createSlice({
         state.email = action.payload.email ?? null;
         state.first_name = action.payload.first_name ?? null;
         state.last_name = action.payload.last_name ?? null;
+        state.isAuthenticated = true;
+      })
+      .addCase(hydrateAuth.fulfilled, (state, action) => {
+        if (action.payload.access) {
+          state.access = action.payload.access;
+          state.refresh = action.payload.refresh;
+          state.email = action.payload.email;
+          state.first_name = action.payload.first_name;
+          state.last_name = action.payload.last_name;
+
+          state.isAuthenticated = true;
+        }
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
         state.status = "failed";
@@ -251,105 +271,3 @@ const authSlice = createSlice({
 
 export const { loadFromStorage, logout } = authSlice.actions;
 export default authSlice.reducer;
-
-// // src/store/authSlice.ts
-// import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-// import {
-//   loginApi,
-//   refreshApi,
-//   saveTokens,
-//   clearTokens,
-// } from "@/lib/authClient";
-
-// type AuthState = {
-//   access?: string | null;
-//   refresh?: string | null;
-//   email?: string | null;
-//   status: "idle" | "loading" | "succeeded" | "failed";
-//   error?: string | null;
-// };
-
-// const initialState: AuthState = {
-//   access: null,
-//   refresh: null,
-//   email: null,
-//   status: "idle",
-//   error: null,
-// };
-
-// export const loginUser = createAsyncThunk(
-//   "auth/loginUser",
-//   async (
-//     { email, password }: { email: string; password: string },
-//     { rejectWithValue }
-//   ) => {
-//     try {
-//       const tokens = await loginApi(email, password);
-//       // save tokens to localStorage
-//       saveTokens(tokens.access, tokens.refresh, email);
-//       return { ...tokens, email };
-//     } catch (err: any) {
-//       return rejectWithValue(err.message || "Login failed");
-//     }
-//   }
-// );
-
-// export const refreshAccess = createAsyncThunk(
-//   "auth/refreshAccess",
-//   async ({ refresh }: { refresh: string }, { rejectWithValue }) => {
-//     try {
-//       const res = await refreshApi(refresh);
-//       saveTokens(res.access, refresh);
-//       return { access: res.access };
-//     } catch (err: any) {
-//       clearTokens();
-//       return rejectWithValue(err.message || "Refresh failed");
-//     }
-//   }
-// );
-
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState,
-//   reducers: {
-//     loadFromStorage(state) {
-//       if (typeof window === "undefined") return;
-//       state.access = localStorage.getItem("ecom_access");
-//       state.refresh = localStorage.getItem("ecom_refresh");
-//       state.email = localStorage.getItem("ecom_user_email");
-//     },
-//     logout(state) {
-//       state.access = null;
-//       state.refresh = null;
-//       state.email = null;
-//       clearTokens();
-//     },
-//   },
-//   extraReducers(builder) {
-//     builder
-//       .addCase(loginUser.pending, (state) => {
-//         state.status = "loading";
-//         state.error = null;
-//       })
-//       .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
-//         state.status = "succeeded";
-//         state.access = action.payload.access;
-//         state.refresh = action.payload.refresh ?? null;
-//         state.email = action.payload.email ?? null;
-//       })
-//       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
-//         state.status = "failed";
-//         state.error = action.payload ?? "Login failed";
-//       })
-//       .addCase(refreshAccess.fulfilled, (state, action: PayloadAction<any>) => {
-//         state.access = action.payload.access;
-//       })
-//       .addCase(refreshAccess.rejected, (state, action: PayloadAction<any>) => {
-//         state.status = "failed";
-//         state.error = action.payload ?? "Refresh failed";
-//       });
-//   },
-// });
-
-// export const { loadFromStorage, logout } = authSlice.actions;
-// export default authSlice.reducer;

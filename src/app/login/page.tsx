@@ -5,8 +5,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SignInForm from "@/components/auth/SignInForm";
+import { useAppSelector } from "@/store/store";
 
 export default function LoginPage() {
+  const isAuth = useAppSelector((s) => s.auth.isAuthenticated);
+
   const router = useRouter();
   const params = useSearchParams();
 
@@ -41,10 +44,23 @@ export default function LoginPage() {
     router.push("/");
   };
 
+  // If already authenticated, redirect to home
+  useEffect(() => {
+    if (isAuth) {
+      router.push("/");
+    }
+  }, [isAuth, router]);
+
+  if (isAuth) {
+    return null;
+  }
+
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-white border rounded-lg p-6 shadow">
-        <h1 className="text-2xl font-semibold text-center mb-4">Sign In</h1>
+        <h1 className="text-2xl font-semibold text-center mb-4">
+          Sign In to ELECTROCO
+        </h1>
 
         <SignInForm
           onSuccess={handleSuccess}

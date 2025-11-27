@@ -32,17 +32,6 @@ export default function SignInForm({
     if (prefilledEmail) setEmail(prefilledEmail);
   }, [prefilledEmail]);
 
-  //   useEffect(() => {
-  //     if (!infoMessage) {
-  //       setShowResendOption(false);
-  //       return;
-  //     }
-
-  //     const includesExpired = infoMessage
-  //       .toLowerCase()
-  //       .includes("link has expired");
-  //     setShowResendOption(includesExpired);
-  //   }, [infoMessage]);
   useEffect(() => {
     if (!infoMessage) {
       setShowResendOption(false);
@@ -181,16 +170,14 @@ export default function SignInForm({
               )}
             </button>
           )}
+          {resendMessage && (
+            <div className="mt-2 text-green-700 text-sm">{resendMessage}</div>
+          )}
+          {resendError && (
+            <div className="mt-2 text-red-600 text-sm">{resendError}</div>
+          )}
         </div>
       )}
-
-      {/* Extra resend messages below */}
-      {/* {resendMessage && (
-        <div className="mt-2 text-green-700 text-sm">{resendMessage}</div>
-      )}
-      {resendError && (
-        <div className="mt-2 text-red-600 text-sm">{resendError}</div>
-      )} */}
 
       {/* Submit button */}
       <div className="flex items-center gap-3">
