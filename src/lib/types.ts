@@ -6,6 +6,8 @@ export interface Product {
   category: string;
   category_name: string;
   primary_image: string;
+  average_rating: number;
+  reviews_count: number;
 }
 
 export interface Meta {
