@@ -74,7 +74,7 @@ export default function Header() {
                         href="/account"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm"
                       >
-                        <User size={16} /> {auth.first_name}
+                        <User size={16} /> {auth.first_name} {auth.last_name}
                       </Link>
 
                       <button

@@ -40,67 +40,65 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
 
-      # - name: Set up kubectl
-      #   if: success()
-      #   run: |
-      #     echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > kubeconfig
-      #     export KUBECONFIG=$PWD/kubeconfig
-      #     kubectl get nodes
+      - name: Set up kubectl
+        if: success()
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl get nodes
 
-      # - name: Update production image tag in K8s
-      #   if: success()
-      #   run: |
-      #     export KUBECONFIG=$PWD/kubeconfig
-      #     kubectl set image deployment/ecom-backend-staging \
-      #       ecom-frontend-staging=sakachris/ecom-frontend:staging-${{ github.sha }} \
-      #       -n ecom-frontend
-      #     kubectl set image deployment/ecom-celery-worker-staging \
-      #       celery-worker-staging=sakachris/ecom-frontend:staging-${{ github.sha }} \
-      #       -n ecom-frontend
+      - name: Update production image tag in K8s
+        if: success()
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl set image deployment/ecom-frontend-staging \
+            ecom-frontend-staging=sakachris/ecom-frontend:staging-${{ github.sha }} \
+            -n ecom-frontend
 
-      # - name: Restart staging deployments
-      #   if: success()
-      #   run: |
-      #     export KUBECONFIG=$PWD/kubeconfig
-      #     kubectl rollout restart deployment ecom-backend-staging -n ecom-frontend
-      #     kubectl rollout restart deployment ecom-celery-worker-staging -n ecom-frontend
+      - name: Restart staging deployments
+        if: success()
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl rollout restart deployment ecom-frontend-staging -n ecom-api
 
-      # # SUCCESS EMAIL
-      # - name: Send success email (staging)
-      #   if: success()
-      #   uses: dawidd6/action-send-mail@v3
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     username: ${{ secrets.EMAIL_USERNAME }}
-      #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: "✅ Staging Deployment Successful"
-      #     to: ${{ secrets.NOTIFY_EMAIL }}
-      #     from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
-      #     secure: true
-      #     body: |
-      #       The staging deployment for branch 'staging' was successful.
-      #       Docker tag: latest-staging
-      #       Deployments restarted: ecom-backend-staging, ecom-celery-worker-staging
-      #       Commit: ${{ github.sha }}
-      #       Timestamp: ${{ github.event.head_commit.timestamp }}
+      # SUCCESS EMAIL
+      - name: Send success email (staging)
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "✅ Ecom Frontend Staging Deployment Successful"
+          to: ${{ secrets.NOTIFY_EMAIL }}
+          from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
+          secure: true
+          body: |
+            The Ecom Frontend staging deployment for branch 'staging' was successful.
+            Docker tags: 
+              latest-staging
+              staging-${{ github.sha }}
+            Deployment restarted: ecom-frontend-staging
+            Commit: ${{ github.sha }}
+            Timestamp: ${{ github.event.head_commit.timestamp }}
 
-      # # FAILURE EMAIL
-      # - name: Send failure email (staging)
-      #   if: failure()
-      #   uses: dawidd6/action-send-mail@v3
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     username: ${{ secrets.EMAIL_USERNAME }}
-      #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     subject: "❌ Staging Deployment Failed"
-      #     to: ${{ secrets.NOTIFY_EMAIL }}
-      #     from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
-      #     secure: true
-      #     body: |
-      #       The staging deployment for branch 'staging' has failed.
-      #       Please check the GitHub Actions logs for details:
-      #       ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      #       Commit: ${{ github.sha }}
-      #       Timestamp: ${{ github.event.head_commit.timestamp }}
+      # FAILURE EMAIL
+      - name: Send failure email (staging)
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "❌ Ecom Frontend Staging Deployment Failed"
+          to: ${{ secrets.NOTIFY_EMAIL }}
+          from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
+          secure: true
+          body: |
+            The Ecom Frontend staging deployment for branch 'staging' has failed.
+            Please check the GitHub Actions logs for details:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Commit: ${{ github.sha }}
+            Timestamp: ${{ github.event.head_commit.timestamp }}
