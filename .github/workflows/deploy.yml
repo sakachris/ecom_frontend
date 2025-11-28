@@ -53,7 +53,7 @@ jobs:
           export KUBECONFIG=$PWD/kubeconfig
           kubectl set image deployment/ecom-frontend-staging \
             ecom-frontend-staging=sakachris/ecom-frontend:staging-${{ github.sha }} \
-            -n ecom-frontend
+            -n ecom-api
 
       - name: Restart staging deployments
         if: success()
