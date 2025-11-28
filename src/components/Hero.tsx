@@ -1,4 +1,6 @@
 // src/components/Hero.tsx
+import Image from "next/image";
+
 export default function Hero() {
   // using uploaded image path as hero banner per instructions
   const img = "/images/Homepage.jpg";
@@ -18,8 +20,8 @@ export default function Hero() {
             </button>
           </div>
         </div>
-        <div className="rounded-lg overflow-hidden bg-white">
-          <img src={img} alt="Hero" className="w-full h-64 object-cover" />
+        <div className="rounded-lg overflow-hidden bg-white relative w-full h-64">
+          <Image src={img} alt="Hero" fill className="object-cover" />
         </div>
       </div>
     </section>

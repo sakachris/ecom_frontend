@@ -1,0 +1,104 @@
+name: Build, Push, Restart Deployment and Notify
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+# Concurrency: one deployment per branch at a time
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  # STAGING JOB
+  staging:
+    if: |
+      (github.event_name == 'push' && github.ref_name == 'staging') ||
+      (github.event_name == 'pull_request' && github.base_ref == 'staging')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push staging image
+        id: docker-build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            sakachris/ecom-frontend:latest-staging
+            sakachris/ecom-frontend:staging-${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}
+
+      - name: Set up kubectl
+        if: success()
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl get nodes
+
+      - name: Update production image tag in K8s
+        if: success()
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl set image deployment/ecom-frontend-staging \
+            ecom-frontend-staging=sakachris/ecom-frontend:staging-${{ github.sha }} \
+            -n ecom-api
+
+      - name: Restart staging deployments
+        if: success()
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl rollout restart deployment ecom-frontend-staging -n ecom-api
+
+      # SUCCESS EMAIL
+      - name: Send success email (staging)
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "✅ Ecom Frontend Staging Deployment Successful"
+          to: ${{ secrets.NOTIFY_EMAIL }}
+          from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
+          secure: true
+          body: |
+            The Ecom Frontend staging deployment for branch 'staging' was successful.
+            Docker tags: 
+              latest-staging
+              staging-${{ github.sha }}
+            Deployment restarted: ecom-frontend-staging
+            Commit: ${{ github.sha }}
+            Timestamp: ${{ github.event.head_commit.timestamp }}
+
+      # FAILURE EMAIL
+      - name: Send failure email (staging)
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "❌ Ecom Frontend Staging Deployment Failed"
+          to: ${{ secrets.NOTIFY_EMAIL }}
+          from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
+          secure: true
+          body: |
+            The Ecom Frontend staging deployment for branch 'staging' has failed.
+            Please check the GitHub Actions logs for details:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Commit: ${{ github.sha }}
+            Timestamp: ${{ github.event.head_commit.timestamp }}

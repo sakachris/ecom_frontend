@@ -1,11 +1,26 @@
 // src/app/layout.tsx
+// "use client";
 import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
+import AuthHydrator from "@/components/AuthHydrator";
 
 export const metadata = {
   title: "Electroco - Electronics Catalog",
 };
 
+// export default function RootLayout({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <html lang="en">
+//       <body>
+//         <ReduxProvider>{children}</ReduxProvider>
+//       </body>
+//     </html>
+//   );
+// }
 export default function RootLayout({
   children,
 }: {
@@ -14,7 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <AuthHydrator /> {/* runs once on startup */}
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );
