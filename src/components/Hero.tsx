@@ -5,7 +5,7 @@ export default function Hero() {
   // using uploaded image path as hero banner per instructions
   const img = "/images/Homepage.jpg";
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1 className="text-4xl font-extrabold leading-tight">

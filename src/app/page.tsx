@@ -64,19 +64,21 @@ export default async function HomePage({ searchParams }: Props) {
     <main>
       <Header />
       <Hero />
-
-      <section className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-4 gap-8">
-        <div className="md:col-span-1">
+      <section className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Sidebar (filters) */}
+        <div className="lg:col-span-1 order-2 lg:order-1">
           <ProductFilterSidebar categories={categories} />
         </div>
 
-        <div className="md:col-span-3">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            <div className="w-full sm:w-1/2">
+        {/* Main content */}
+        <div className="lg:col-span-3 order-1 lg:order-2">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+            {/* Search */}
+            <div className="w-full md:w-1/2">
               <SearchBar initial={q} />
             </div>
 
-            {/* Sort Dropdown → now client component */}
+            {/* Sort dropdown */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">Sort by</span>
               <SortSelect />
@@ -100,6 +102,40 @@ export default async function HomePage({ searchParams }: Props) {
           )}
         </div>
       </section>
+
+      {/* <section className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-4 gap-8">
+        <div className="md:col-span-1">
+          <ProductFilterSidebar categories={categories} />
+        </div>
+
+        <div className="md:col-span-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div className="w-full sm:w-1/2">
+              <SearchBar initial={q} />
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">Sort by</span>
+              <SortSelect />
+            </div>
+          </div>
+
+          {productsRes.results.length > 0 ? (
+            <>
+              <ProductGrid products={productsRes.results} />
+
+              <Pagination
+                page={productsRes.meta.page}
+                totalPages={productsRes.meta.pages}
+                searchParams={params}
+              />
+            </>
+          ) : (
+            <div className="text-center py-10 text-gray-600 text-lg font-medium">
+              {`No results found for "${q}".`}
+            </div>
+          )}
+        </div>
+      </section> */}
       <Footer />
     </main>
   );
