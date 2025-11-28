@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShoppingCart, User, LogOut, LogIn, UserPlus } from "lucide-react";
+import { ShoppingCart, User, LogOut, LogIn } from "lucide-react";
 import AuthModal from "@/components/auth/AuthModal";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { logout } from "@/store/authSlice";

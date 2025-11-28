@@ -54,7 +54,8 @@ export async function loginApi(
   });
 
   if (!res.ok) {
-    let errorJson: any = null;
+    // let errorJson: any = null;
+    let errorJson: Record<string, unknown> | null = null;
 
     try {
       errorJson = await res.json();
@@ -62,7 +63,8 @@ export async function loginApi(
       throw { detail: "Login failed. Unexpected server error." };
     }
 
-    throw errorJson; // Throw usable JSON
+    throw errorJson || { detail: "Login failed" }; // Throw usable JSON
+    // throw errorJson;
   }
 
   return (await res.json()) as TokenResponse;
