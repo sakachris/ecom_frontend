@@ -55,8 +55,17 @@ export default function RegisterForm({
 
       setLocalSuccess(res);
       if (onSuccess) onSuccess(res, form.email);
-    } catch (err: any) {
-      setLocalError(err?.message ?? "Registration failed");
+      //     } catch (err: unknown) {
+      //   const message =
+      //     err instanceof Error ? err.message : "Registration failed";
+      //   setLocalError(message);
+      // }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setLocalError(err.message);
+      } else {
+        setLocalError(String(err) || "Registration failed");
+      }
     } finally {
       setLoadingRegister(false);
     }

@@ -58,10 +58,6 @@ export default async function HomePage({ searchParams }: Props) {
     fetchJson<{ results: Category[] }>(categoriesUrl),
   ]);
 
-  // derive brands from products for filter dropdown
-  const brands = Array.from(
-    new Set(productsRes.results.map((p) => inferBrandFromName(p.name)))
-  );
   const categories = categoriesRes.results;
 
   return (
@@ -99,7 +95,7 @@ export default async function HomePage({ searchParams }: Props) {
             </>
           ) : (
             <div className="text-center py-10 text-gray-600 text-lg font-medium">
-              No results found for "{q}".
+              {`No results found for "${q}".`}
             </div>
           )}
         </div>
@@ -109,19 +105,19 @@ export default async function HomePage({ searchParams }: Props) {
   );
 }
 
-function inferBrandFromName(name: string) {
-  const known = [
-    "HP",
-    "Lenovo",
-    "Dell",
-    "Asus",
-    "Samsung",
-    "Kingston",
-    "IBM",
-    "Epson",
-    "Microsoft",
-  ];
-  for (const b of known)
-    if (name.toLowerCase().includes(b.toLowerCase())) return b;
-  return "Other";
-}
+// function inferBrandFromName(name: string) {
+//   const known = [
+//     "HP",
+//     "Lenovo",
+//     "Dell",
+//     "Asus",
+//     "Samsung",
+//     "Kingston",
+//     "IBM",
+//     "Epson",
+//     "Microsoft",
+//   ];
+//   for (const b of known)
+//     if (name.toLowerCase().includes(b.toLowerCase())) return b;
+//   return "Other";
+// }

@@ -73,7 +73,7 @@ export const loginUser = createAsyncThunk(
         tokens.last_name
       );
       return { ...tokens, email };
-    } catch (err: any) {
+    } catch (err: unknown) {
       return rejectWithValue(err); // Keep JSON
     }
   }
@@ -89,9 +89,10 @@ export const refreshAccess = createAsyncThunk(
       const res = await refreshApi(refresh);
       saveTokens(res.access, refresh);
       return { access: res.access };
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTokens();
-      return rejectWithValue(err.message || "Refresh failed");
+      const message = err instanceof Error ? err.message : "Refresh failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -101,12 +102,23 @@ export const refreshAccess = createAsyncThunk(
  * -----------------------------------*/
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
-  async (payload: any, { rejectWithValue }) => {
+  async (
+    payload: {
+      email: string;
+      first_name: string;
+      last_name: string;
+      phone_number?: string | null;
+      password: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const res = await registerApi(payload);
       return res.detail;
-    } catch (err: any) {
-      return rejectWithValue(err.message || "Registration failed");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Registration failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -121,8 +133,10 @@ export const verifyEmail = createAsyncThunk(
     try {
       const res = await verifyEmailApi(token);
       return res.detail;
-    } catch (err: any) {
-      return rejectWithValue(err.message || "Email verification failed");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Email verification failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -136,8 +150,9 @@ export const resendVerification = createAsyncThunk(
     try {
       const res = await resendVerificationEmailApi(email);
       return res.detail;
-    } catch (err: any) {
-      return rejectWithValue(err.message || "Resend failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Resend failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -187,15 +202,27 @@ const authSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
-        state.status = "succeeded";
-        state.access = action.payload.access;
-        state.refresh = action.payload.refresh ?? null;
-        state.email = action.payload.email ?? null;
-        state.first_name = action.payload.first_name ?? null;
-        state.last_name = action.payload.last_name ?? null;
-        state.isAuthenticated = true;
-      })
+      .addCase(
+        loginUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            access: string;
+            refresh?: string;
+            email?: string;
+            first_name?: string;
+            last_name?: string;
+          }>
+        ) => {
+          state.status = "succeeded";
+          state.access = action.payload.access;
+          state.refresh = action.payload.refresh ?? null;
+          state.email = action.payload.email ?? null;
+          state.first_name = action.payload.first_name ?? null;
+          state.last_name = action.payload.last_name ?? null;
+          state.isAuthenticated = true;
+        }
+      )
       .addCase(hydrateAuth.fulfilled, (state, action) => {
         if (action.payload.access) {
           state.access = action.payload.access;
@@ -207,20 +234,30 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
         }
       })
-      .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+      .addCase(loginUser.rejected, (state, action: PayloadAction<unknown>) => {
         state.status = "failed";
-        state.error = action.payload ?? "Login failed";
+        state.error =
+          typeof action.payload === "string" ? action.payload : "Login failed";
       });
 
     /* REFRESH */
     builder
-      .addCase(refreshAccess.fulfilled, (state, action: PayloadAction<any>) => {
-        state.access = action.payload.access;
-      })
-      .addCase(refreshAccess.rejected, (state, action: PayloadAction<any>) => {
-        state.status = "failed";
-        state.error = action.payload ?? "Refresh failed";
-      });
+      .addCase(
+        refreshAccess.fulfilled,
+        (state, action: PayloadAction<{ access: string }>) => {
+          state.access = action.payload.access;
+        }
+      )
+      .addCase(
+        refreshAccess.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.status = "failed";
+          state.error =
+            typeof action.payload === "string"
+              ? action.payload
+              : "Refresh failed";
+        }
+      );
 
     /* REGISTER */
     builder
@@ -232,10 +269,16 @@ const authSlice = createSlice({
         state.registerStatus = "succeeded";
         state.registerMessage = action.payload;
       })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.registerStatus = "failed";
-        state.registerMessage = action.payload as string;
-      });
+      .addCase(
+        registerUser.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.registerStatus = "failed";
+          state.registerMessage =
+            typeof action.payload === "string"
+              ? action.payload
+              : "Registration failed";
+        }
+      );
 
     /* VERIFY EMAIL */
     builder
@@ -243,14 +286,23 @@ const authSlice = createSlice({
         state.verifyStatus = "loading";
         state.verifyMessage = null;
       })
-      .addCase(verifyEmail.fulfilled, (state, action) => {
-        state.verifyStatus = "succeeded";
-        state.verifyMessage = action.payload;
-      })
-      .addCase(verifyEmail.rejected, (state, action) => {
-        state.verifyStatus = "failed";
-        state.verifyMessage = action.payload as string;
-      });
+      .addCase(
+        verifyEmail.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.verifyStatus = "succeeded";
+          state.verifyMessage = action.payload;
+        }
+      )
+      .addCase(
+        verifyEmail.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.verifyStatus = "failed";
+          state.verifyMessage =
+            typeof action.payload === "string"
+              ? action.payload
+              : "Email verification failed";
+        }
+      );
 
     /* RESEND VERIFICATION */
     builder
@@ -258,14 +310,23 @@ const authSlice = createSlice({
         state.resendStatus = "loading";
         state.resendMessage = null;
       })
-      .addCase(resendVerification.fulfilled, (state, action) => {
-        state.resendStatus = "succeeded";
-        state.resendMessage = action.payload;
-      })
-      .addCase(resendVerification.rejected, (state, action) => {
-        state.resendStatus = "failed";
-        state.resendMessage = action.payload as string;
-      });
+      .addCase(
+        resendVerification.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.resendStatus = "succeeded";
+          state.resendMessage = action.payload;
+        }
+      )
+      .addCase(
+        resendVerification.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.resendStatus = "failed";
+          state.resendMessage =
+            typeof action.payload === "string"
+              ? action.payload
+              : "Resend failed";
+        }
+      );
   },
 });
 

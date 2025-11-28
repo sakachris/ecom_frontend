@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/store/store";
 import { loginUser, resendVerification } from "@/store/authSlice";
 
 export default function SignInForm({
@@ -14,7 +14,7 @@ export default function SignInForm({
   prefilledEmail?: string | null;
 }) {
   const dispatch = useAppDispatch();
-  const auth = useAppSelector((s) => s.auth);
+  // const auth = useAppSelector((s) => s.auth);
 
   const [email, setEmail] = useState(prefilledEmail || "");
   const [password, setPassword] = useState("");
@@ -55,30 +55,69 @@ export default function SignInForm({
     try {
       const res = await dispatch(resendVerification(email)).unwrap();
       setResendMessage(res);
-    } catch (error: any) {
-      setResendError(error?.message || "Failed to resend verification email");
+      // } catch (error: any) {
+      //   setResendError(error?.message || "Failed to resend verification email");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to resend verification email";
+      setResendError(message);
     } finally {
       setLoadingResend(false);
     }
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setErrorLocal(null);
+  //   setLoadingLogin(true);
+
+  //   try {
+  //     const result = await dispatch(loginUser({ email, password })).unwrap();
+  //     if (onSuccess) onSuccess();
+  //   } catch (err: any) {
+  //     let message = "Login failed";
+  //     setShowResendOption(false);
+
+  //     if (err?.detail) {
+  //       message = Array.isArray(err.detail) ? err.detail.join(" ") : err.detail;
+  //     }
+
+  //     // detect unverified email error
+  //     if (message.toLowerCase().includes("not verified")) {
+  //       setShowResendOption(true);
+  //     }
+
+  //     setErrorLocal(message);
+  //   } finally {
+  //     setLoadingLogin(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorLocal(null);
     setLoadingLogin(true);
 
     try {
-      const result = await dispatch(loginUser({ email, password })).unwrap();
+      await dispatch(loginUser({ email, password })).unwrap();
+
       if (onSuccess) onSuccess();
-    } catch (err: any) {
+    } catch (err: unknown) {
       let message = "Login failed";
       setShowResendOption(false);
 
-      if (err?.detail) {
-        message = Array.isArray(err.detail) ? err.detail.join(" ") : err.detail;
+      // Try to safely extract `.detail` from RTK rejectWithValue error
+      if (typeof err === "object" && err !== null && "detail" in err) {
+        const detail = (err as { detail?: string | string[] }).detail;
+        if (detail) {
+          message = Array.isArray(detail) ? detail.join(" ") : detail;
+        }
+      } else if (err instanceof Error) {
+        message = err.message;
       }
 
-      // detect unverified email error
+      // detect unverified email
       if (message.toLowerCase().includes("not verified")) {
         setShowResendOption(true);
       }
