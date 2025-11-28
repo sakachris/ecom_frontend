@@ -28,7 +28,7 @@ jobs:
           if [[ "${GITHUB_REF_NAME}" == "staging" ]]; then
             echo "ENV_SUFFIX=staging" >> $GITHUB_OUTPUT
             echo "API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}" >> $GITHUB_OUTPUT
-          else if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+          elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "ENV_SUFFIX=production" >> $GITHUB_OUTPUT
             echo "API_URL=${{ secrets.NEXT_PUBLIC_API_URL_PRODUCTION }}" >> $GITHUB_OUTPUT
           fi
@@ -58,7 +58,7 @@ jobs:
           export KUBECONFIG=$PWD/kubeconfig
           if [[ "${GITHUB_REF_NAME}" == "staging" ]]; then
             DEPLOY=ecom-frontend-staging
-          else if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+          elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
             DEPLOY=ecom-frontend
           fi
 
