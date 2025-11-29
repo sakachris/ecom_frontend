@@ -21,7 +21,16 @@ export default function Hero() {
           </div>
         </div>
         <div className="rounded-lg overflow-hidden bg-white relative w-full h-64">
-          <Image src={img} alt="Hero" fill className="object-cover" />
+          <Image
+            src={img}
+            alt="Hero"
+            fill
+            className="object-cover"
+            // width={1200}
+            // height={800}
+            loading="eager"
+            priority
+          />
         </div>
       </div>
     </section>
