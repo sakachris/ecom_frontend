@@ -11,6 +11,7 @@ import Pagination from "@/components/ui/Pagination";
 import SortSelect from "@/components/SortSelect";
 import Footer from "@/components/Footer";
 import FiltersWrapper from "@/components/products/FilterWrapper";
+import BrowseByCategory from "@/components/BrowseByCategory";
 
 const PRODUCTS_API = "/products/";
 const CATEGORIES_API = "/categories/?page_size=20";
@@ -74,7 +75,7 @@ export default async function HomePage({ searchParams }: Props) {
           <ProductFilterSidebar categories={categories} />
         </div> */}
         <div className="lg:col-span-1 order-1 lg:order-1">
-          <FiltersWrapper categories={categories} />
+          <FiltersWrapper categories={categories} basePath={"/"} />
         </div>
 
         {/* Main content */}
@@ -109,6 +110,7 @@ export default async function HomePage({ searchParams }: Props) {
           )}
         </div>
       </section>
+      <BrowseByCategory />
       <Footer />
     </main>
   );
