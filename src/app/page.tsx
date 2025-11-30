@@ -5,11 +5,13 @@ import { ProductsResponse, Category } from "@/lib/types";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/products/ProductGrid";
-import ProductFilterSidebar from "@/components/products/ProductFilterSidebar";
+// import ProductFilterSidebar from "@/components/products/ProductFilterSidebar";
 import Pagination from "@/components/ui/Pagination";
-import SearchBar from "@/components/SearchBar";
+// import SearchBar from "@/components/SearchBar";
 import SortSelect from "@/components/SortSelect";
 import Footer from "@/components/Footer";
+import FiltersWrapper from "@/components/products/FilterWrapper";
+import BrowseByCategory from "@/components/BrowseByCategory";
 
 const PRODUCTS_API = "/products/";
 const CATEGORIES_API = "/categories/?page_size=20";
@@ -64,19 +66,27 @@ export default async function HomePage({ searchParams }: Props) {
     <main>
       <Header />
       <Hero />
-
-      <section className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-4 gap-8">
-        <div className="md:col-span-1">
+      <section
+        id="products-start"
+        className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-4 gap-8 scroll-mt-20"
+      >
+        {/* Sidebar (filters) */}
+        {/* <div className="lg:col-span-1 order-2 lg:order-1">
           <ProductFilterSidebar categories={categories} />
+        </div> */}
+        <div className="lg:col-span-1 order-1 lg:order-1">
+          <FiltersWrapper categories={categories} basePath={"/"} />
         </div>
 
-        <div className="md:col-span-3">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            <div className="w-full sm:w-1/2">
+        {/* Main content */}
+        <div className="lg:col-span-3 order-1 lg:order-2">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+            {/* Search */}
+            {/* <div className="w-full md:w-1/2">
               <SearchBar initial={q} />
-            </div>
+            </div> */}
 
-            {/* Sort Dropdown → now client component */}
+            {/* Sort dropdown */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">Sort by</span>
               <SortSelect />
@@ -100,24 +110,8 @@ export default async function HomePage({ searchParams }: Props) {
           )}
         </div>
       </section>
+      <BrowseByCategory />
       <Footer />
     </main>
   );
 }
-
-// function inferBrandFromName(name: string) {
-//   const known = [
-//     "HP",
-//     "Lenovo",
-//     "Dell",
-//     "Asus",
-//     "Samsung",
-//     "Kingston",
-//     "IBM",
-//     "Epson",
-//     "Microsoft",
-//   ];
-//   for (const b of known)
-//     if (name.toLowerCase().includes(b.toLowerCase())) return b;
-//   return "Other";
-// }

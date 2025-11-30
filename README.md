@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-Commerce Product Catalogue Frontend
 
-## Getting Started
+**ELECTROCO** is a production-grade e-commerce product catalog: a Next.js (App Router) + TypeScript frontend paired with a Django REST Framework backend. The repository contains the frontend application. It focuses on fast product browsing, filtering, search, sorting, pagination, and JWT-based authentication.
 
-First, run the development server:
+---
+
+## Key Features
+
+- Browse products with pagination and responsive product grid
+- Dynamic filtering by category, price range, and reviews
+- Search functionality in name and description
+- Sorting by price, rating, and newest
+- JWT authentication (login / register / refresh) and global auth state
+- Product detail pages with image galleries and reviews
+- Reusable UI components and Redux Toolkit state management
+
+---
+
+## Tech Stack
+
+- Frontend: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- State: Redux Toolkit
+- Backend (API): Django REST Framework + SimpleJWT (separate repo)
+- Dev tooling: ESLint, TypeScript, Prettier
+
+---
+
+## Quickstart (Frontend)
+
+Prerequisites
+
+- Node.js 18+ and npm or yarn
+- API backend running (see backend README in the backend repo)
+
+Install dependencies
+
+```bash
+cd ecom_frontend
+npm install
+# or
+# yarn
+```
+
+Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# opens at http://localhost:3000 by default
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build for production
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Type-check and lint
 
-## Learn More
+```bash
+npm run type-check
+npm run lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a `.env.local` in the `ecom_frontend` root (or set these in your environment):
 
-## Deploy on Vercel
+- `NEXT_PUBLIC_API_URL` — URL to the backend API (e.g. `http://localhost:8000/api`)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Example `.env.local`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+```
+
+Notes
+
+- The backend is expected to manage real JWT secrets and httpOnly cookies for production security.
+- Do not commit `.env.local` to source control.
+
+---
+
+## Project Structure (frontend)
+
+- `src/app/` — Next.js App Router pages and layout
+- `src/components/` — Reusable UI components (products, auth, common, ui)
+- `src/lib/` — API clients, helpers, and types
+- `src/store/` — Redux slices and store wiring
+
+---
+
+## Authentication Flow (high level)
+
+- User logs in via API → backend returns access & refresh tokens
+- Frontend stores tokens according to app config (prefer httpOnly cookies)
+- `authSlice` in Redux holds `isAuthenticated`, `user`, and token state
+- Axios client attaches the access token to requests and handles refresh
+
+---
+
+## Filtering, Search & Sorting
+
+The product listing supports URL query parameters so pages are shareable and bookmarkable:
+
+- `?search=` — keyword search
+- `?category=` — category id
+- `?min_price=` / `?max_price=` — price range
+- `?ordering=` — ordering fields (e.g., `-price` for descending)
+- `?page=` — pagination
+
+---
+
+## CI / Deployment Notes
+
+- CI typically runs lint, type-check, and `next build`.
+- For production, the monorepo uses a Docker multi-stage build. Adjust environment variables for production API endpoints.
+
+## Live sites / Deployments
+
+- **Staging:** [https://ecom-staging.sakachris.com](https://ecom-staging.sakachris.com)
+- **Production:** [https://ecom.sakachris.com](https://ecom.sakachris.com)
+
+This project is automatically deployed:
+
+- Push to the `staging` branch → deploys to the **staging** site above.
+- Push to the `main` branch → deploys to the **production** site above.
+
+Common env vars for CI/CD
+
+- `REGISTRY_USER`, `REGISTRY_TOKEN`, `IMAGE_NAME`, `GITHUB_REF_NAME`
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+- Fork and create a branch: `git checkout -b feature/your-feature`
+- Follow code formatting and lint rules
+- Add tests if you add significant logic
+- Open a Pull Request and ensure CI passes
+
+Please keep commits logical and small for easier review.
+
+---
+
+## Troubleshooting
+
+- 500s from the frontend usually indicate the backend API is not reachable or misconfigured `NEXT_PUBLIC_API_URL`.
+- Check browser console and network tab for failing API calls.
+- Run `npm run lint` and `npm run type-check` to surface common issues early.
+
+---
+
+## License
+
+MIT License © 2025 Chrispine
+
+---
+
+## Contact
+
+Chris Saka - sakachris90@gmail.com
+
+Project Link: https://github.com/sakachris/ecom_frontend
+
+---

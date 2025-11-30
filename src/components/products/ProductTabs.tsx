@@ -16,7 +16,8 @@ type Props = {
   };
   reviews: {
     review_id: string;
-    user_email?: string;
+    user_first_name?: string;
+    user_last_name?: string;
     rating: number;
     comment: string;
     created_at?: string;

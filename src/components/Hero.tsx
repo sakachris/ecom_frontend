@@ -1,11 +1,18 @@
 // src/components/Hero.tsx
+"use client";
+
 import Image from "next/image";
 
 export default function Hero() {
   // using uploaded image path as hero banner per instructions
   const img = "/images/Homepage.jpg";
+
+  const scrollToProducts = () => {
+    const el = document.getElementById("products-start");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1 className="text-4xl font-extrabold leading-tight">
@@ -15,13 +22,27 @@ export default function Hero() {
             Carefully curated collection of laptops, storage, servers and more.
           </p>
           <div className="mt-6">
-            <button className="px-6 py-3 rounded-full bg-black text-white">
+            <button
+              type="button"
+              aria-label="Scroll to products"
+              onClick={scrollToProducts}
+              className="px-6 py-3 rounded-full bg-black text-white"
+            >
               Shop Now
             </button>
           </div>
         </div>
         <div className="rounded-lg overflow-hidden bg-white relative w-full h-64">
-          <Image src={img} alt="Hero" fill className="object-cover" />
+          <Image
+            src={img}
+            alt="Hero"
+            fill
+            className="object-cover"
+            // width={1200}
+            // height={800}
+            loading="eager"
+            priority
+          />
         </div>
       </div>
     </section>

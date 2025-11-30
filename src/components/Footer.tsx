@@ -37,22 +37,22 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Shop</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href="/products" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   All Products
                 </Link>
               </li>
               <li>
-                <Link href="/deals" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   Deals & Discounts
                 </Link>
               </li>
               <li>
-                <Link href="/new-arrivals" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   New Arrivals
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   Categories
                 </Link>
               </li>
@@ -64,22 +64,22 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Support</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href="/help" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   Returns & Refunds
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="hover:text-black">
+                <Link href="#" className="hover:text-black">
                   Shipping Info
                 </Link>
               </li>

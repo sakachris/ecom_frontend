@@ -8,6 +8,7 @@ import { ShoppingCart, User, LogOut, LogIn } from "lucide-react";
 import AuthModal from "@/components/auth/AuthModal";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { logout } from "@/store/authSlice";
+import HeaderSearch from "./HeaderSearch";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -33,6 +34,9 @@ export default function Header() {
               className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-black focus:ring-1 focus:ring-black transition"
             />
           </div> */}
+          <div className="hidden md:block w-full max-w-sm mx-4">
+            <HeaderSearch />
+          </div>
 
           {/* Right-side icons */}
           <div className="flex items-center gap-4">
@@ -74,7 +78,7 @@ export default function Header() {
                         href="/account"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm"
                       >
-                        <User size={16} /> {auth.first_name} {auth.last_name}
+                        <User size={16} /> {auth.first_name}
                       </Link>
 
                       <button
@@ -92,6 +96,10 @@ export default function Header() {
         </div>
 
         {/* Mobile Search */}
+        {/* Mobile Search */}
+        <div className="block md:hidden px-4 pb-3">
+          <HeaderSearch />
+        </div>
         {/* <div className="px-4 pb-3 md:hidden">
           <input
             type="text"

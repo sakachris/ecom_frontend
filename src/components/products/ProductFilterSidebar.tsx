@@ -4,14 +4,22 @@
 import { Category } from "@/lib/types";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function ProductFilterSidebar({
   categories,
-}: {
+  basePath,
+  onApplied,
+}: // onLoadingChange,
+{
   categories: Category[];
+  basePath: string;
+  onApplied?: () => void;
+  // onLoadingChange?: (loading: boolean) => void;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const [category, setCategory] = useState(searchParams.get("category") ?? "");
   const [minPrice, setMinPrice] = useState(
@@ -46,7 +54,12 @@ export default function ProductFilterSidebar({
     // Reset pagination
     params.set("page", "1");
 
-    router.push(`/?${params.toString()}`);
+    // notify parent drawer is loading
+    // if (onLoadingChange) onLoadingChange(true);
+
+    // router.push(`/?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
+    if (onApplied) onApplied();
   };
 
   const resetFilters = () => {
@@ -56,7 +69,9 @@ export default function ProductFilterSidebar({
     params.delete("price__lte");
     params.delete("average_rating__gte");
     params.set("page", "1");
-    router.push(`/?${params.toString()}`);
+    // router.push(`/?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
+    if (onApplied) onApplied();
 
     setCategory("");
     setMinPrice("");
@@ -68,21 +83,23 @@ export default function ProductFilterSidebar({
     <aside className="w-full md:w-72">
       <div className="p-4 bg-white rounded-lg shadow-sm">
         {/* Category Filter */}
-        <div className="mb-4">
-          <h4 className="text-sm font-semibold mb-2">Category</h4>
-          <select
-            className="w-full rounded border px-2 py-1"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">All</option>
-            {categories.map((c) => (
-              <option key={c.category_id} value={c.category_id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {pathname === "/" && (
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold mb-2">Category</h4>
+            <select
+              className="w-full rounded border px-2 py-1"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="">All</option>
+              {categories.map((c) => (
+                <option key={c.category_id} value={c.category_id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Price Range */}
         <div className="mb-4">
@@ -127,14 +144,32 @@ export default function ProductFilterSidebar({
         {/* Action Buttons */}
         <div className="flex flex-col gap-2 mt-4">
           <button
-            onClick={applyFilters}
+            type="button"
+            onClick={() => {
+              applyFilters();
+              if (onApplied) onApplied(); // auto-close
+            }}
+            // onClick={applyFilters}
             className="bg-black text-white w-full rounded py-2"
           >
             Apply Filters
           </button>
+          {/* <button
+            type="button"
+            onClick={applyFilters}
+            className="bg-black text-white w-full rounded py-2 flex justify-center items-center"
+            disabled={isApplying}
+          >
+            {isApplying ? "Applying..." : "Apply Filters"}
+          </button> */}
 
           <button
-            onClick={resetFilters}
+            // onClick={resetFilters}
+            type="button"
+            onClick={() => {
+              resetFilters();
+              if (onApplied) onApplied(); // auto-close
+            }}
             className="bg-gray-100 border rounded w-full py-2"
           >
             Reset

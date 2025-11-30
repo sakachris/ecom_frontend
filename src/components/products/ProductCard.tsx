@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Product } from "@/lib/types";
 import Link from "next/link";
 import StarRating from "@/components/common/StarRating";
+import { ShoppingCart } from "lucide-react";
 
 export default function ProductCard({ p }: { p: Product }) {
   return (
@@ -10,7 +11,7 @@ export default function ProductCard({ p }: { p: Product }) {
       className="
       bg-white 
       rounded-2xl 
-      p-4 
+      p-2 sm:p-4 
       shadow-sm 
       hover:shadow-md 
       transition-shadow 
@@ -52,15 +53,77 @@ export default function ProductCard({ p }: { p: Product }) {
       </div>
 
       {/* Rating */}
-      <div className="flex items-center gap-2">
-        <StarRating rating={p.average_rating} size={12} />
-        <span className="text-xs text-gray-600">
-          {Number(p.average_rating).toFixed(1)}/5 ({p.reviews_count} reviews)
+      <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center scale-[0.9] sm:scale-100 origin-left">
+          <StarRating rating={p.average_rating} size={12} />
+        </div>
+
+        <span className="text-[10px] sm:text-xs text-gray-600 leading-none whitespace-nowrap">
+          {Number(p.average_rating).toFixed(1)}/5 ({p.reviews_count})
         </span>
       </div>
 
-      {/* Price + CTA */}
-      <div className="mt-auto flex items-center justify-between">
+      {/* <div className="flex items-center gap-2">
+        <div className="flex items-center h-3">
+          <StarRating rating={p.average_rating} size={12} />
+        </div>
+        <span className="text-xs text-gray-600 leading-2">
+          {Number(p.average_rating).toFixed(1)}/5 ({p.reviews_count})
+        </span>
+      </div> */}
+
+      {/* PRICE */}
+      <div className="mt-auto">
+        <div className="text-lg font-bold text-gray-900">
+          ${Number(p.price).toFixed(2)}
+        </div>
+      </div>
+
+      {/* ACTION BUTTONS */}
+      <div className="flex items-center justify-between gap-3">
+        {/* VIEW BUTTON */}
+        <Link href={`/products/${p.product_id}`} passHref>
+          <button
+            className="
+              flex-1 
+              px-3 
+              py-2 
+              text-xs 
+              font-medium 
+              rounded-full 
+              bg-black 
+              text-white 
+              hover:bg-gray-500 
+              active:scale-[0.98] 
+              transition-all
+            "
+          >
+            View
+          </button>
+        </Link>
+
+        {/* ADD TO CART BUTTON */}
+        <button
+          className="
+            w-10 
+            h-10 
+            flex 
+            items-center 
+            justify-center 
+            rounded-full 
+            border 
+            border-gray-300 
+            hover:border-black 
+            hover:bg-gray-100 
+            active:scale-[0.95] 
+            transition-all
+          "
+        >
+          <ShoppingCart className="w-5 h-5 text-gray-700" />
+        </button>
+      </div>
+
+      {/* <div className="mt-auto flex items-center justify-between">
         <div className="text-lg font-bold text-gray-900">
           ${Number(p.price).toFixed(2)}
         </div>
@@ -82,7 +145,7 @@ export default function ProductCard({ p }: { p: Product }) {
             View
           </button>
         </Link>
-      </div>
+      </div> */}
     </article>
   );
 }

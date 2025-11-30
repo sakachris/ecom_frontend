@@ -54,7 +54,7 @@ export default function ProductDetailGallery({
       </div>
 
       {/* MOBILE thumbnails */}
-      <div className="flex md:hidden gap-3 mt-2 overflow-x-auto col-span-full">
+      <div className="flex md:hidden gap-5 mt-2 overflow-x-auto col-span-full justify-center">
         {normalized.slice(0, 3).map((src, i) => (
           <button
             key={i}
