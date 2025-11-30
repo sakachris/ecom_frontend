@@ -20,7 +20,6 @@
 
 - Frontend: Next.js 14 (App Router), TypeScript, Tailwind CSS
 - State: Redux Toolkit
-- HTTP: Axios
 - Backend (API): Django REST Framework + SimpleJWT (separate repo)
 - Dev tooling: ESLint, TypeScript, Prettier
 
