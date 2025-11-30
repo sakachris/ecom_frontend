@@ -78,8 +78,8 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           # subject: "✅ Deployment Successful (${GITHUB_REF_NAME})"
-          # subject: "✅ Deployment Successful (${{ github.ref_name }})"
-          subject: "✅ Deployment Successful (${{ steps.yourstep.outputs.ENV_SUFFIX }})"
+          subject: "✅ Deployment Successful (${{ github.ref_name }})"
+          # subject: "✅ Deployment Successful (${{ steps.yourstep.outputs.ENV_SUFFIX }})"
           to: ${{ secrets.NOTIFY_EMAIL }}
           from: "Deployment Bot <${{ secrets.EMAIL_USERNAME }}>"
           secure: true

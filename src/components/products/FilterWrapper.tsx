@@ -17,7 +17,7 @@ export default function FiltersWrapper({
   return (
     <>
       {/* Mobile filter button */}
-      <div className="lg:hidden mb-4 flex justify-end">
+      <div className="lg:hidden mb-4 flex justify-center">
         <button
           type="button"
           onClick={() => setOpen(true)}

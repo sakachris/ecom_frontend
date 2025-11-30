@@ -83,11 +83,14 @@ export default async function CategoryPage(props: Props) {
         {/* Main content */}
         <div className="lg:col-span-3 order-1 lg:order-2">
           {/* Section Heading */}
-          <h1 className="text-2xl font-bold mb-4">{category.name}</h1>
-          {category.description && (
-            <p className="text-gray-600 mb-6">{category.description}</p>
-          )}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+
+          <div className="flex flex-col items-center justify-center md:flex-row md:items-center md:justify-between mb-6 gap-4">
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl font-bold mb-0">{category.name}</h1>
+              {category.description && (
+                <p className="text-gray-600 mt-1">{category.description}</p>
+              )}
+            </div>
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">Sort by</span>
               {/* <SortSelect /> */}
