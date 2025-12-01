@@ -35,5 +35,5 @@ export default function LoginParamsReader({
     });
   }, [params, onParams]);
 
-  return null; // IMPORTANT: renders nothing → no hydration mismatch
+  return null;
 }

@@ -1,12 +1,6 @@
 // src/lib/authClient.ts
 import { buildUrl } from "./apiClient";
-
-type TokenResponse = {
-  access: string;
-  refresh?: string;
-  first_name?: string;
-  last_name?: string;
-};
+import { TokenResponse } from "./types";
 
 const LOGIN_PATH = "/auth/token/";
 const REFRESH_PATH = "/auth/token/refresh/";
@@ -24,24 +18,6 @@ const USER_LAST_NAME_KEY = "ecom_user_last_name";
 /** -----------------------------
  * LOGIN
  * ------------------------------*/
-// export async function loginApi(
-//   email: string,
-//   password: string
-// ): Promise<TokenResponse> {
-//   const url = buildUrl(LOGIN_PATH);
-//   const res = await fetch(url, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ email, password }),
-//   });
-
-//   if (!res.ok) {
-//     const text = await res.text().catch(() => "");
-//     throw new Error(`Login failed: ${res.status} ${res.statusText} ${text}`);
-//   }
-
-//   return (await res.json()) as TokenResponse;
-// }
 export async function loginApi(
   email: string,
   password: string
@@ -54,7 +30,6 @@ export async function loginApi(
   });
 
   if (!res.ok) {
-    // let errorJson: any = null;
     let errorJson: Record<string, unknown> | null = null;
 
     try {
@@ -63,8 +38,7 @@ export async function loginApi(
       throw { detail: "Login failed. Unexpected server error." };
     }
 
-    throw errorJson || { detail: "Login failed" }; // Throw usable JSON
-    // throw errorJson;
+    throw errorJson || { detail: "Login failed" };
   }
 
   return (await res.json()) as TokenResponse;
@@ -119,7 +93,6 @@ export async function registerApi(data: {
 /** -----------------------------
  * VERIFY EMAIL
  * endpoint: /auth/verify-email/?token=123
- * BEST approach: GET
  * ------------------------------*/
 export async function verifyEmailApi(
   token: string
