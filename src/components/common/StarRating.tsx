@@ -1,9 +1,7 @@
-import React from "react";
+// src/components/common/StarRating.tsx
 
-interface StarRatingProps {
-  rating: number;
-  size?: number; // default 24px
-}
+import React from "react";
+import { StarRatingProps } from "@/lib/types";
 
 const StarRating: React.FC<StarRatingProps> = ({ rating, size = 24 }) => {
   const totalStars = 5;
@@ -37,14 +35,6 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, size = 24 }) => {
           d={
             "M9.049.927c.3-.921 1.603-.921 1.902 0l1.286 3.98a1 \n          1 0 00.95.69h4.184c.969 0 1.372 1.24.588 \n          1.81l-3.39 2.462a1 1 0 00-.364 1.118l1.286 \n          3.98c.3.921-.755 1.688-1.539 \n          1.118l-3.39-2.462a1 1 0 00-1.175 \n          0l-3.39 2.462c-.784.57-1.838-.197-1.539-1.118l1.286-3.98a1 \n          1 0 00-.364-1.118L1.04 7.407c-.784-.57-.38-1.81.588-1.81h4.184a1 \n          1 0 00.95-.69L9.049.927z"
           }
-          // d="M9.049.927c.3-.921 1.603-.921 1.902 0l1.286 3.98a1
-          // 1 0 00.95.69h4.184c.969 0 1.372 1.24.588
-          // 1.81l-3.39 2.462a1 1 0 00-.364 1.118l1.286
-          // 3.98c.3.921-.755 1.688-1.539
-          // 1.118l-3.39-2.462a1 1 0 00-1.175
-          // 0l-3.39 2.462c-.784.57-1.838-.197-1.539-1.118l1.286-3.98a1
-          // 1 0 00-.364-1.118L1.04 7.407c-.784-.57-.38-1.81.588-1.81h4.184a1
-          // 1 0 00.95-.69L9.049.927z"
         />
       </svg>
     );
