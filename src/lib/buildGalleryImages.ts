@@ -1,5 +1,10 @@
-// Builds 4 images total: 1 main + 3 thumbnails.
-// Primary image ALWAYS first. If fewer exist, repeat primary.
+// src/lib/buildGalleryImages.ts
+
+/** Build an array of gallery image URLs for product display
+ * Ensures that the primary image is first, followed by other images,
+ * and fills remaining slots with the primary image if needed.
+ */
+
 export function buildGalleryImages(
   items: { image: string; is_primary?: boolean }[],
   frameCount = 4

@@ -25,15 +25,6 @@ export default function Header() {
           <Link href="/" className="text-2xl font-extrabold tracking-tight">
             ELECTROCO
           </Link>
-
-          {/* Search bar (optional but nice to have) */}
-          {/* <div className="hidden md:flex flex-1 mx-8">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-black focus:ring-1 focus:ring-black transition"
-            />
-          </div> */}
           <div className="hidden md:block w-full max-w-sm mx-4">
             <HeaderSearch />
           </div>
@@ -47,7 +38,7 @@ export default function Header() {
             >
               <ShoppingCart className="w-6 h-6" />
 
-              {/* fake count: replace with real number */}
+              {/* fake count */}
               <span className="absolute -top-1 -right-1 bg-black text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                 0
               </span>
@@ -64,12 +55,6 @@ export default function Header() {
                     >
                       <LogIn size={20} className="w-6 h-6" /> Login
                     </button>
-                    {/* <button
-                      onClick={() => setOpen(true)}
-                      className="p-2 rounded-full hover:bg-gray-100 transition"
-                    >
-                      <UserPlus className="w-6 h-6" />
-                    </button> */}
                   </>
                 ) : (
                   <>
@@ -96,17 +81,9 @@ export default function Header() {
         </div>
 
         {/* Mobile Search */}
-        {/* Mobile Search */}
         <div className="block md:hidden px-4 pb-3">
           <HeaderSearch />
         </div>
-        {/* <div className="px-4 pb-3 md:hidden">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-black focus:ring-1 focus:ring-black transition"
-          />
-        </div> */}
       </header>
       <AuthModal open={open} onClose={() => setOpen(false)} />
     </>

@@ -30,7 +30,7 @@
 Prerequisites
 
 - Node.js 18+ and npm or yarn
-- API backend running (see backend README in the backend repo)
+- API backend running [backend repo](https://github.com/sakachris/ecommerce_api)
 
 Install dependencies
 

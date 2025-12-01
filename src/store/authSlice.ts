@@ -125,7 +125,6 @@ export const registerUser = createAsyncThunk(
 
 /* ------------------------------------
  * VERIFY EMAIL
- * (GET endpoint)
  * -----------------------------------*/
 export const verifyEmail = createAsyncThunk(
   "auth/verifyEmail",

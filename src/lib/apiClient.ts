@@ -16,7 +16,7 @@ export function buildUrl(
   return url.toString();
 }
 
-// simple fetch wrapper (server-safe)
+// simple fetch wrapper
 export async function fetchJson<T>(url: string, init?: RequestInit) {
   const res = await fetch(url, {
     cache: "no-store",
@@ -34,36 +34,3 @@ export async function fetchJson<T>(url: string, init?: RequestInit) {
 
   return (await res.json()) as T;
 }
-
-// REMOVING INIT
-// export async function fetchJson<T>(url: string) {
-//   const res = await fetch(url, {
-//     cache: "no-store",
-//     headers: {
-//       "User-Agent": "Mozilla/5.0",
-//     },
-//   });
-
-//   if (!res.ok) {
-//     const text = await res.text().catch(() => "");
-//     throw new Error(`API Error: ${res.status} ${res.statusText} ${text}`);
-//   }
-
-//   return (await res.json()) as T;
-// }
-
-// export async function fetchJson<T>(url: string, init?: RequestInit) {
-//   //   const res = await fetch(url, { cache: "no-store", ...init });
-//   const res = await fetch(url, {
-//     cache: "no-store",
-//     headers: {
-//       "User-Agent": "Mozilla/5.0",
-//     },
-//   });
-
-//   if (!res.ok) {
-//     const text = await res.text().catch(() => "");
-//     throw new Error(`API Error: ${res.status} ${res.statusText} ${text}`);
-//   }
-//   return (await res.json()) as T;
-// }

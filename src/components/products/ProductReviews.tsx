@@ -3,15 +3,7 @@
 
 import React from "react";
 import StarRating from "@/components/common/StarRating";
-
-type Review = {
-  review_id: string;
-  user_first_name?: string;
-  user_last_name?: string;
-  rating: number;
-  comment: string;
-  created_at?: string;
-};
+import { Review } from "@/lib/types";
 
 export default function ProductReviews({ reviews }: { reviews: Review[] }) {
   return (
