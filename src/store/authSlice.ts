@@ -19,6 +19,8 @@ type AuthState = {
 
   isAuthenticated: boolean;
 
+  hydrated?: boolean;
+
   status: "idle" | "loading" | "succeeded" | "failed";
   error?: string | null;
 
@@ -40,6 +42,8 @@ const initialState: AuthState = {
   last_name: null,
 
   isAuthenticated: false,
+
+  hydrated: false,
 
   status: "idle",
   error: null,
@@ -223,6 +227,7 @@ const authSlice = createSlice({
         }
       )
       .addCase(hydrateAuth.fulfilled, (state, action) => {
+        state.hydrated = true;
         if (action.payload.access) {
           state.access = action.payload.access;
           state.refresh = action.payload.refresh;

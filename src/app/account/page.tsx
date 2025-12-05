@@ -49,10 +49,16 @@ export default function AccountPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (!auth.access) {
+    if (auth.hydrated && !auth.access) {
       router.push("/");
     }
-  }, [auth.access, router]);
+  }, [auth.hydrated, auth.access, router]);
+
+  //   useEffect(() => {
+  //     if (!auth.access) {
+  //       router.push("/");
+  //     }
+  //   }, [auth.access, router]);
 
   // Load profile
   useEffect(() => {
