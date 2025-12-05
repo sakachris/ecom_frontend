@@ -1,3 +1,5 @@
+// src/components/AuthHydrator.tsx
+
 "use client";
 
 import { useEffect } from "react";
