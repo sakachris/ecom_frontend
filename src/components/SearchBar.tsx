@@ -2,7 +2,7 @@
 
 "use client";
 
-import Input from "@/components/ui/Input";
+import MyInput from "@/components/ui/MyInput";
 import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -37,7 +37,7 @@ export default function SearchBar({ initial }: { initial?: string }) {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full gap-3">
-      <Input
+      <MyInput
         placeholder="Search for products..."
         value={q}
         onChange={(value) => setQ(value)}
