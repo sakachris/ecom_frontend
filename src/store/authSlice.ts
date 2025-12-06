@@ -194,6 +194,7 @@ const authSlice = createSlice({
       state.first_name = null;
       state.last_name = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("user_profile"); // ⭐ very important
       clearTokens();
     },
   },

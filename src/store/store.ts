@@ -2,14 +2,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import productsReducer from "./productsSlice";
 import filtersReducer from "./filtersSlice";
+import profileReducer from "./profileSlice";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import authReducer from "./authSlice";
+// import { profile } from "console";
 
 export const store = configureStore({
   reducer: {
     products: productsReducer,
     filters: filtersReducer,
     auth: authReducer,
+    profile: profileReducer,
   },
 });
 
