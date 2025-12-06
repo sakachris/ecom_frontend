@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch } from "@/store/store";
 import { loginUser, resendVerification } from "@/store/authSlice";
+import { fetchProfile } from "@/store/profileSlice";
 
 export default function SignInForm({
   onSuccess,
@@ -71,7 +72,8 @@ export default function SignInForm({
     setLoadingLogin(true);
 
     try {
-      await dispatch(loginUser({ email, password })).unwrap();
+      const result = await dispatch(loginUser({ email, password })).unwrap();
+      dispatch(fetchProfile(result.access));
 
       if (onSuccess) onSuccess();
     } catch (err: unknown) {

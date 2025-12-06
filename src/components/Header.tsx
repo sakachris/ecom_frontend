@@ -14,6 +14,8 @@ export default function Header() {
   const [open, setOpen] = useState(false); // for AuthModal (login)
   const [profileOpen, setProfileOpen] = useState(false); // for ProfileModal
   const auth = useAppSelector((s) => s.auth);
+  const profile = useAppSelector((s) => s.profile.data);
+  const profileLoading = useAppSelector((s) => s.profile.loading);
   const dispatch = useAppDispatch();
 
   const isLoggedIn = Boolean(auth.access && auth.email);
@@ -68,7 +70,11 @@ export default function Header() {
                       <UserCheck className="w-5 h-5" />
                       {/* show name on md+ screens */}
                       <span className="hidden md:inline text-sm">
-                        {auth.first_name}
+                        {/* {auth.first_name} */}
+                        {/* {profile?.first_name} */}
+                        {profileLoading
+                          ? "..."
+                          : profile?.first_name || auth.email}
                       </span>
                     </button>
 

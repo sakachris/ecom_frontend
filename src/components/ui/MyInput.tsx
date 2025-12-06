@@ -1,5 +1,5 @@
 // src/components/ui/Input.tsx
-export default function Input({
+export default function MyInput({
   placeholder = "",
   value,
   onChange,

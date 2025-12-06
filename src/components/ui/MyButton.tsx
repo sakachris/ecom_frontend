@@ -1,5 +1,5 @@
 // src/components/ui/Button.tsx
-export default function Button({
+export default function MyButton({
   children,
   onClick,
   className = "",

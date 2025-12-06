@@ -6,16 +6,17 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { logout } from "@/store/authSlice";
 import {
   getProfile,
-  updateProfile,
+  //   updateProfile,
   deleteAccount,
   //   ProfileResponse,
 } from "@/lib/userApi";
+import { patchProfile } from "@/store/profileSlice";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 import { Label } from "@/components/ui/label";
-import { Inputs } from "@/components/ui/inputs";
-import { Buttons } from "@/components/ui/buttons";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import {
@@ -27,6 +28,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ArrowLeft } from "lucide-react";
 
 // import { toast } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -86,31 +88,56 @@ export default function AccountPage() {
     load();
   }, [auth.access]);
 
+  //   async function handleSave(e: React.FormEvent) {
+  //     e.preventDefault();
+  //     if (!auth.access) return;
+
+  //     setSaving(true);
+
+  //     try {
+  //       await updateProfile(auth.access, {
+  //         first_name: firstName,
+  //         last_name: lastName,
+  //         phone_number: phone,
+  //       });
+
+  //       //   setProfile(updated);
+  //       toast.success("Profile updated successfully!");
+  //     } catch (err: unknown) {
+  //       let message = "Failed to update profile.";
+
+  //       if (err instanceof Error && err.message) {
+  //         message = err.message;
+  //       }
+  //       toast.error(message);
+  //     } finally {
+  //       setSaving(false);
+  //     }
+  //   }
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!auth.access) return;
 
     setSaving(true);
 
-    try {
-      await updateProfile(auth.access, {
-        first_name: firstName,
-        last_name: lastName,
-        phone_number: phone,
-      });
-
-      //   setProfile(updated);
-      toast.success("Profile updated successfully!");
-    } catch (err: unknown) {
-      let message = "Failed to update profile.";
-
-      if (err instanceof Error && err.message) {
-        message = err.message;
-      }
-      toast.error(message);
-    } finally {
-      setSaving(false);
-    }
+    dispatch(
+      patchProfile({
+        token: auth.access,
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phone,
+        },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        toast.success("Profile updated successfully!");
+      })
+      .catch((err) => {
+        toast.error(err?.message || "Failed to update profile.");
+      })
+      .finally(() => setSaving(false));
   }
 
   async function handleDeleteAccount() {
@@ -146,16 +173,24 @@ export default function AccountPage() {
   return (
     <div className="max-w-xl mx-auto p-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+
           <CardTitle>My Account</CardTitle>
         </CardHeader>
+
+        {/* <CardHeader>
+          <CardTitle>My Account</CardTitle>
+        </CardHeader> */}
 
         <CardContent>
           <form className="space-y-4" onSubmit={handleSave}>
             {/* First Name */}
             <div className="space-y-1">
               <Label htmlFor="firstName">First Name</Label>
-              <Inputs
+              <Input
                 id="firstName"
                 required
                 value={firstName}
@@ -166,7 +201,7 @@ export default function AccountPage() {
             {/* Last Name */}
             <div className="space-y-1">
               <Label htmlFor="lastName">Last Name</Label>
-              <Inputs
+              <Input
                 id="lastName"
                 required
                 value={lastName}
@@ -177,7 +212,7 @@ export default function AccountPage() {
             {/* Phone Number */}
             <div className="space-y-1">
               <Label htmlFor="phone">Phone Number</Label>
-              <Inputs
+              <Input
                 id="phone"
                 placeholder="Optional"
                 value={phone}
@@ -185,9 +220,9 @@ export default function AccountPage() {
               />
             </div>
 
-            <Buttons type="submit" className="w-full" disabled={saving}>
+            <Button type="submit" className="w-full" disabled={saving}>
               {saving ? "Saving..." : "Save Changes"}
-            </Buttons>
+            </Button>
           </form>
 
           <Separator className="my-6" />
@@ -195,9 +230,9 @@ export default function AccountPage() {
           {/* Delete Account Dialog */}
           <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
             <DialogTrigger asChild>
-              <Buttons variant="destructive" className="w-full">
+              <Button variant="destructive" className="w-full">
                 Delete Account
-              </Buttons>
+              </Button>
             </DialogTrigger>
 
             <DialogContent>
@@ -210,20 +245,20 @@ export default function AccountPage() {
               </DialogHeader>
 
               <DialogFooter className="flex justify-end gap-2">
-                <Buttons
+                <Button
                   variant="outline"
                   onClick={() => setDeleteDialogOpen(false)}
                 >
                   Cancel
-                </Buttons>
+                </Button>
 
-                <Buttons
+                <Button
                   variant="destructive"
                   onClick={handleDeleteAccount}
                   disabled={deleting}
                 >
                   {deleting ? "Deleting..." : "Yes, Delete"}
-                </Buttons>
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
