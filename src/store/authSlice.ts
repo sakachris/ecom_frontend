@@ -187,6 +187,25 @@ const authSlice = createSlice({
 
       state.isAuthenticated = !!state.access;
     },
+    setTokens(
+      state,
+      action: PayloadAction<{ access: string; refresh?: string | null }>
+    ) {
+      state.access = action.payload.access;
+
+      if (action.payload.refresh !== undefined) {
+        state.refresh = action.payload.refresh;
+      }
+
+      // sync to localStorage
+      localStorage.setItem("ecom_access", action.payload.access);
+
+      if (action.payload.refresh) {
+        localStorage.setItem("ecom_refresh", action.payload.refresh);
+      }
+
+      state.isAuthenticated = true;
+    },
     logout(state) {
       state.access = null;
       state.refresh = null;
@@ -335,5 +354,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { loadFromStorage, logout } = authSlice.actions;
+// export const { loadFromStorage, logout } = authSlice.actions;
+export const { loadFromStorage, setTokens, logout } = authSlice.actions;
 export default authSlice.reducer;
